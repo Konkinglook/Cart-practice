@@ -131,7 +131,7 @@ body.showCart .container{
     background-color: transparent;
     color: #eee;
 }
-.listCart.item:nth-child(even){
+.listCart .item:nth-child(even){
     background-color: #eee1;
 }
 .listCart{
