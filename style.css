@@ -140,3 +140,10 @@ body.showCart .container{
 .listCart::-webkit-scrollbar{
     width: 0;
 }
+
+@media screen and (max-width:992px){
+    .listProduct{
+        grid-template-columns: repeat(3,1fr);
+    }
+}
+

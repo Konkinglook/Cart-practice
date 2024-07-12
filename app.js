@@ -66,7 +66,7 @@ const addToCart = (product_id) => {
     addCartToMemory();
 }
 const addCartToMemory = () =>{
-    
+    localStorage.setItem('cart',JSON.stringify(carts));
 }
 
 const addToCartToHTML =() =>{
@@ -77,6 +77,7 @@ const addToCartToHTML =() =>{
             totalQuantity = totalQuantity + cart.quantity;
             let newCart = document.createElement('div');
             newCart.classList.add('item');
+            newCart.dataset.id =cart.product_id;
             let positionProduct = listProduct.findIndex((value) => value.id == cart.product_id);
             let info = listProduct[positionProduct];
             newCart.innerHTML = 
@@ -102,6 +103,40 @@ const addToCartToHTML =() =>{
     }
     iconCartSpan.innerHTML = totalQuantity;
 }
+listCartHTML.addEventListener('click', (event) =>{
+    let positionClick =event.target;
+    if(positionClick.classList.contains('minus') || positionClick.classList.contains('plus')){
+        let product_id = positionClick.parentElement.parentElement.dataset.id;
+        //console.log(product_id)
+        let type = 'minus';
+        if(positionClick.classList.contains('plus')){
+            type = 'plus';
+        }
+        cheangeQuantity(product_id,type)
+    }
+})
+const cheangeQuantity = (product_id,type) =>{
+    let positionItemInCart = carts.findIndex((value) => value.product_id == product_id);
+    if(positionItemInCart >= 0){
+        switch (type){
+            case 'plus':
+                carts[positionItemInCart].quantity = carts[positionItemInCart].quantity + 1;
+                break;
+            default:
+                let valueChange = carts[positionItemInCart].quantity -1;
+                if(valueChange > 0){
+                    carts[positionItemInCart].quantity = valueChange;
+                }
+                else{
+                    carts.splice(positionItemInCart,1)
+                }
+                break;
+        }
+    }
+    addCartToMemory();
+    addToCartToHTML();
+}
+
 const initApp = () =>{
     //get data from json
     fetch('products.json')
@@ -111,6 +146,11 @@ const initApp = () =>{
         console.log(listProduct);
         addDataToHTML();
 
+        // get cart from memory
+        if(localStorage.getItem('cart')){
+            carts = JSON.parse(localStorage.getItem('cart'));
+            addToCartToHTML();
+        }
     })
 }
 
